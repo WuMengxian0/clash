@@ -6,7 +6,6 @@
 # DOMAIN-SUFFIX: 1
 # PROCESS-NAME: 1
 # TOTAL: 8
-payload:
 DOMAIN,hls-amt.itunes.apple.com
 DOMAIN,hls.itunes.apple.com
 DOMAIN,np-edge.itunes.apple.com
