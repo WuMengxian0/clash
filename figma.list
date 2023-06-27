@@ -1,4 +1,4 @@
-# NAME: emby
+# NAME: figma
 # AUTHOR: xian
 # REPO: https://github.com/blackmatrix7/ios_rule_script
 # UPDATED: 2022-02-14 02:10:28
@@ -6,4 +6,4 @@
 # DOMAIN-SUFFIX: 1
 # PROCESS-NAME: 1
 # TOTAL: 8
-DOMAIN,emby.enjoyit.eu.org
+DOMAIN,www.figma.com
