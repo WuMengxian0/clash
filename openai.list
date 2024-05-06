@@ -24,6 +24,7 @@ DOMAIN-SUFFIX,openai.com,PROXY
 DOMAIN-SUFFIX,pay.openai.com,PROXY 
 DOMAIN-SUFFIX,openaiapi-site.azureedge.net,PROXY 
 DOMAIN-SUFFIX,chat.openai.com,PROXY 
+DOMAIN-SUFFIX,chatgpt.com,PROXY 
 DOMAIN-SUFFIX,auth0.openai.com,PROXY 
 DOMAIN-SUFFIX,platform.openai.com,PROXY 
 DOMAIN-SUFFIX,intercom.io,PROXY 
