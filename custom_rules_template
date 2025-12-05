@@ -1,0 +1,415 @@
+# --- 1. 核心配置 (固定你的优化设置) ---
+mixed-port: 7890
+allow-lan: false
+bind-address: '*'
+mode: Rule
+log-level: info
+external-controller: '127.0.0.1:9090'
+unified-delay: true
+tcp-concurrent: true
+
+# --- 2. DNS 配置 (固定你的优化设置) ---
+dns:
+    enable: true
+    ipv6: false
+    default-nameserver: [223.5.5.5, 119.29.29.29, 114.114.114.114]
+    enhanced-mode: fake-ip
+    fake-ip-range: 198.18.0.1/16
+    use-hosts: true
+    respect-rules: true
+    proxy-server-nameserver: [223.5.5.5, 119.29.29.29, 114.114.114.114]
+    nameserver: [223.5.5.5, 119.29.29.29, 114.114.114.114]
+    fallback: [1.1.1.1, 8.8.8.8]
+    fallback-filter: { geoip: true, geoip-code: CN, geosite: [gfw], ipcidr: [240.0.0.0/4], domain: [+.google.com, +.facebook.com, +.youtube.com] }
+
+# --- 3. 占位符：代理节点 ---
+# 转换工具会自动将原始订阅中的 proxies 列表插入到这里
+proxies: {{proxies}}
+
+# --- 4. 代理组 (Group) 定义 ---
+# 复制了你原有的分组结构，并使用占位符 {{group}} 插入节点列表
+proxy-groups:
+  - name: 🚀 节点选择
+    type: select
+    proxies:
+      - ♻️ 自动选择
+      - 🚀 手动切换
+      - DIRECT
+  
+  - name: 🚀 手动切换
+    type: select
+    proxies: {{group}}
+    
+  - name: ♻️ 自动选择
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    tolerance: 50
+    proxies: {{group}} 
+
+  # 以下是你的其他分流组，保持与你原 `.ini` 文件中规则的目标组名一致
+  - name: 📲 电报消息
+    type: select
+    proxies: [🚀 节点选择, ♻️ 自动选择, 🚀 手动切换, DIRECT] # 简化
+    
+  - name: 📹 油管视频
+    type: select
+    proxies: [🚀 节点选择, ♻️ 自动选择, 🚀 手动切换, DIRECT]
+    
+  - name: 🎥 奈飞视频
+    type: select
+    proxies: [🚀 节点选择, ♻️ 自动选择, 🚀 手动切换, DIRECT]
+    
+  - name: 🎥 HBOMAX
+    type: select
+    proxies: [🚀 节点选择, ♻️ 自动选择, 🚀 手动切换, DIRECT]
+
+  - name: 📺 巴哈姆特
+    type: select
+    proxies: [🚀 节点选择, ♻️ 自动选择, 🚀 手动切换, DIRECT]
+
+  - name: 📺 哔哩哔哩
+    type: select
+    proxies: [DIRECT, 🚀 节点选择, ♻️ 自动选择, 🚀 手动切换]
+
+  - name: 🌍 国外媒体
+    type: select
+    proxies: [🚀 节点选择, ♻️ 自动选择, 🚀 手动切换, DIRECT]
+
+  - name: 🌏 国内媒体
+    type: select
+    proxies: [🚀 节点选择, ♻️ 自动选择, 🚀 手动切换, DIRECT]
+
+  - name: 📢 谷歌FCM
+    type: select
+    proxies: [DIRECT, 🚀 节点选择, ♻️ 自动选择, 🚀 手动切换]
+
+  - name: 📒 AI
+    type: select
+    proxies: [🚀 节点选择, ♻️ 自动选择, 🚀 手动切换, DIRECT]
+
+  - name: 🍎 Appleintelligence
+    type: select
+    proxies: [🚀 节点选择, ♻️ 自动选择, 🚀 手动切换, DIRECT]
+
+  - name: 🎦 EMBY
+    type: select
+    proxies: [DIRECT, 🚀 节点选择, ♻️ 自动选择]
+
+  - name: Ⓜ️ 微软云盘
+    type: select
+    proxies: [DIRECT, 🚀 节点选择, ♻️ 自动选择]
+    
+  - name: Ⓜ️ 微软服务
+    type: select
+    proxies: [DIRECT, 🚀 节点选择, ♻️ 自动选择]
+    
+  - name: 🧑‍🎨 Figma
+    type: select
+    proxies: [DIRECT, 🚀 节点选择, ♻️ 自动选择]
+    
+  - name: 🎵 AppleMusic
+    type: select
+    proxies: [DIRECT, 🚀 节点选择, ♻️ 自动选择]
+    
+  - name: 🍎 AppleTV
+    type: select
+    proxies: [DIRECT, 🚀 节点选择, ♻️ 自动选择]
+    
+  - name: 🍎 苹果服务
+    type: select
+    proxies: [DIRECT, 🚀 节点选择, ♻️ 自动选择]
+
+  - name: 🎮 游戏平台
+    type: select
+    proxies: [DIRECT, 🚀 节点选择, ♻️ 自动选择]
+    
+  - name: 🎶 网易音乐
+    type: select
+    proxies: [DIRECT, 🚀 节点选择, ♻️ 自动选择]
+
+  - name: 💼 Slack
+    type: select
+    proxies: [DIRECT, 🚀 节点选择, ♻️ 自动选择]
+    
+  - name: 🎯 全球直连
+    type: select
+    proxies: [DIRECT]
+    
+  - name: 🛑 广告拦截
+    type: select
+    proxies: [REJECT, DIRECT]
+    
+  - name: 🥸 自定义拦截
+    type: select
+    proxies: [REJECT, DIRECT]
+    
+  - name: 🍃 应用净化
+    type: select
+    proxies: [REJECT, DIRECT]
+
+  - name: 🐟 漏网之鱼
+    type: select
+    proxies: [🚀 节点选择, DIRECT]
+    
+# --- 5. 规则 (Rule) - 引用你的远程规则列表 ---
+
+rules:
+  # 本地/私有网络直连
+  - 'IP-CIDR,127.0.0.0/8,DIRECT'
+  - 'IP-CIDR,172.16.0.0/12,DIRECT'
+  - 'IP-CIDR,192.168.0.0/16,DIRECT'
+  - 'IP-CIDR,10.0.0.0/8,DIRECT'
+  - 'IP-CIDR,198.18.0.0/16,DIRECT,no-resolve' # Fake-IP范围
+  
+  # 引用你的 ACL4SSR 规则集 - (将 rule-providers 放在最前面)
+  - RULE-SET,LocalAreaNetwork,🎯 全球直连
+  - RULE-SET,UnBan,🎯 全球直连
+  - RULE-SET,BanAD,🛑 广告拦截
+  - RULE-SET,anygo,🥸 自定义拦截
+  - RULE-SET,BanProgramAD,🍃 应用净化
+  - RULE-SET,GoogleFCM,📢 谷歌FCM
+  - RULE-SET,GoogleCN,🎯 全球直连
+  - RULE-SET,AiDomain,📒 AI
+  - RULE-SET,Appleintelligence,🍎 Appleintelligence
+  - RULE-SET,emby,🎦 EMBY
+  - RULE-SET,OneDrive,Ⓜ️ 微软云盘
+  - RULE-SET,Microsoft,Ⓜ️ 微软服务
+  - RULE-SET,figma,🧑‍🎨 Figma
+  - RULE-SET,am,🎵 AppleMusic
+  - RULE-SET,AppleTV,🍎 AppleTV
+  - RULE-SET,Apple,🍎 苹果服务
+  - RULE-SET,Telegram,📲 电报消息
+  - RULE-SET,NetEaseMusic,🎶 网易音乐
+  - RULE-SET,Slack,💼 Slack
+  - RULE-SET,Epic,🎮 游戏平台
+  - RULE-SET,Sony,🎮 游戏平台
+  - RULE-SET,Steam,🎮 游戏平台
+  - RULE-SET,YouTube,📹 油管视频
+  - RULE-SET,Netflix,🎥 奈飞视频
+  - RULE-SET,HBOUSA,🎥 HBOMAX
+  - RULE-SET,Bahamut,📺 巴哈姆特
+  - RULE-SET,BilibiliHMT,📺 哔哩哔哩
+  - RULE-SET,Bilibili,📺 哔哩哔哩
+  - RULE-SET,ChinaMedia,🌏 国内媒体
+  - RULE-SET,ProxyMedia,🌍 国外媒体
+  - RULE-SET,ProxyGFWlist,🚀 节点选择
+  - RULE-SET,ChinaDomain,🎯 全球直连
+  - RULE-SET,ChinaCompanyIp,🎯 全球直连
+  - RULE-SET,Download,🎯 全球直连
+  
+  # 兜底规则（放在最后）
+  - GEOIP,CN,🎯 全球直连
+  - MATCH,🐟 漏网之鱼
+
+# --- 6. 规则集提供方 (Rule Provider) ---
+# 引用你ini文件中所有的远程规则链接
+rule-providers:
+  LocalAreaNetwork:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/LocalAreaNetwork.list"
+    path: ./ruleset/LocalAreaNetwork.yaml
+    interval: 86400
+  UnBan:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/UnBan.list"
+    path: ./ruleset/UnBan.yaml
+    interval: 86400
+  BanAD:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/BanAD.list"
+    path: ./ruleset/BanAD.yaml
+    interval: 86400
+  anygo:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/WuMengxian0/clash/main/anygo.list"
+    path: ./ruleset/anygo.yaml
+    interval: 86400
+  BanProgramAD:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/BanProgramAD.list"
+    path: ./ruleset/BanProgramAD.yaml
+    interval: 86400
+  GoogleFCM:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/GoogleFCM.list"
+    path: ./ruleset/GoogleFCM.yaml
+    interval: 86400
+  GoogleCN:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/GoogleCN.list"
+    path: ./ruleset/GoogleCN.yaml
+    interval: 86400
+  AiDomain:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/szkane/ClashRuleSet/main/Clash/Ruleset/AiDomain.list"
+    path: ./ruleset/AiDomain.yaml
+    interval: 86400
+  Appleintelligence:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/WuMengxian0/clash/refs/heads/main/Appleintelligence.list"
+    path: ./ruleset/Appleintelligence.yaml
+    interval: 86400
+  emby:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/WuMengxian0/clash/refs/heads/main/emby.list"
+    path: ./ruleset/emby.yaml
+    interval: 86400
+  OneDrive:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/OneDrive.list"
+    path: ./ruleset/OneDrive.yaml
+    interval: 86400
+  Microsoft:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Microsoft.list"
+    path: ./ruleset/Microsoft.yaml
+    interval: 86400
+  figma:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/WuMengxian0/clash/main/figma.list"
+    path: ./ruleset/figma.yaml
+    interval: 86400
+  am:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/WuMengxian0/clash/main/am.list"
+    path: ./ruleset/am.yaml
+    interval: 86400
+  AppleTV:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/WuMengxian0/clash/main/AppleTV.list"
+    path: ./ruleset/AppleTV.yaml
+    interval: 86400
+  Apple:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Apple.list"
+    path: ./ruleset/Apple.yaml
+    interval: 86400
+  Telegram:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Telegram.list"
+    path: ./ruleset/Telegram.yaml
+    interval: 86400
+  NetEaseMusic:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/NetEaseMusic.list"
+    path: ./ruleset/NetEaseMusic.yaml
+    interval: 86400
+  Slack:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/WuMengxian0/clash/main/slack.list"
+    path: ./ruleset/Slack.yaml
+    interval: 86400
+  Epic:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Epic.list"
+    path: ./ruleset/Epic.yaml
+    interval: 86400
+  Sony:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Sony.list"
+    path: ./ruleset/Sony.yaml
+    interval: 86400
+  Steam:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Steam.list"
+    path: ./ruleset/Steam.yaml
+    interval: 86400
+  YouTube:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/YouTube.list"
+    path: ./ruleset/YouTube.yaml
+    interval: 86400
+  Netflix:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Netflix.list"
+    path: ./ruleset/Netflix.yaml
+    interval: 86400
+  HBOUSA:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/HBOUSA/HBOUSA.list"
+    path: ./ruleset/HBOUSA.yaml
+    interval: 86400
+  Bahamut:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Bahamut.list"
+    path: ./ruleset/Bahamut.yaml
+    interval: 86400
+  BilibiliHMT:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/BilibiliHMT.list"
+    path: ./ruleset/BilibiliHMT.yaml
+    interval: 86400
+  Bilibili:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Bilibili.list"
+    path: ./ruleset/Bilibili.yaml
+    interval: 86400
+  ChinaMedia:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/ChinaMedia.list"
+    path: ./ruleset/ChinaMedia.yaml
+    interval: 86400
+  ProxyMedia:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/ProxyMedia.list"
+    path: ./ruleset/ProxyMedia.yaml
+    interval: 86400
+  ProxyGFWlist:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/ProxyGFWlist.list"
+    path: ./ruleset/ProxyGFWlist.yaml
+    interval: 86400
+  ChinaDomain:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/ChinaDomain.list"
+    path: ./ruleset/ChinaDomain.yaml
+    interval: 86400
+  ChinaCompanyIp:
+    type: http
+    behavior: ipcidr
+    url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/ChinaCompanyIp.list"
+    path: ./ruleset/ChinaCompanyIp.yaml
+    interval: 86400
+  Download:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Download.list"
+    path: ./ruleset/Download.yaml
+    interval: 86400
+
+# 占位符 {{custom_proxy_group}} 和 {{custom_rules}} 
+# 如果转换器支持，它将使用此模板并忽略 ini 文件。
+# 但对于 ACL4SSR 的 `.ini` 格式，此模板需要托管并作为唯一的“远程配置”提供。
